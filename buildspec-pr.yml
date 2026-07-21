@@ -9,6 +9,6 @@ phases:
   build:
     commands:
       - npm install --legacy-peer-deps --loglevel=error
-      - VITE_API_URL=http://localhost:8080/api/versao npm run build
+      - VITE_API_URL=http://localhost:8080 npm run build
       - echo Rodando testes unitários
       - npm test
