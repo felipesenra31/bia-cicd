@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Instalando Node 21 e npm...
+      - curl -fsSL https://rpm.nodesource.com/setup_21.x | sudo bash -
+      - sudo yum install -y nodejs
+  build:
+    commands:
+      - npm install --legacy-peer-deps --loglevel=error
+      - VITE_API_URL=http://bia-app-env.us-east-1.elasticbeanstalk.com npm run build
+      - echo Rodando testes unitários
+      - npm test
