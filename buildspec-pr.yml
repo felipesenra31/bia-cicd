@@ -9,6 +9,5 @@ phases:
   build:
     commands:
       - npm install --legacy-peer-deps --loglevel=error
-      - VITE_API_URL=http://bia-app-env.us-east-1.elasticbeanstalk.com npm run build
       - echo Rodando testes unitários
       - npm test
