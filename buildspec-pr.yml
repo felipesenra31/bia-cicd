@@ -8,7 +8,6 @@ phases:
       - sudo yum install -y nodejs
   build:
     commands:
-      - cd client && npm install --legacy-peer-deps --loglevel=error
-      - cd client && VITE_API_URL=http://127.0.0.1:8080 npm run build
+      - cd client && npm install --legacy-peer-deps --loglevel=error && VITE_API_URL=http://localhost:8080 npm run build
       - echo Rodando testes unitários
       - npm test
