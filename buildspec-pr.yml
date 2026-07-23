@@ -10,5 +10,4 @@ phases:
     commands:
       - cd client && npm install --legacy-peer-deps --loglevel=error && VITE_API_URL=http://localhost:8080 npm run build
       - echo Rodando testes unitários
-      - npm install --loglevel=error 
-      - cd $CODEBUILD_SRC_DIR && npm test
+      - cd $CODEBUILD_SRC_DIR && npm install --loglevel=error && npm test
