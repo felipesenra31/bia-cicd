@@ -1,29 +1,13 @@
 version: 0.2
 
 phases:
-  pre_build:
+  install:
     commands:
-      - echo Fazendo login no ECR...
-      - aws --version
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 135135392431.dkr.ecr.us-east-1.amazonaws.com
-      - REPOSITORY_URI=135135392431.dkr.ecr.us-east-1.amazonaws.com/bia
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
-      - export IMAGE_TAG
+      - echo Instalando Node 21 e npm...
+      - curl -fsSL https://rpm.nodesource.com/setup_21.x | sudo bash -
+      - sudo yum install -y nodejs
   build:
     commands:
-      - echo Build iniciado em `date`
-      - echo Gerando imagem da BIA...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-  post_build:
-    commands:
-      - echo Build finalizado com sucesso em `date`
-      - echo Fazendo push da imagem para o ECR...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Gerando artefato da imagem para o ECS
-      - printf '[{"name":"bia","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - codebuild-breakpoint
-artifacts:
-  files: imagedefinitions.json
+      - cd client && npm install --legacy-peer-deps --loglevel=error && VITE_API_URL=http://bia-alb-881450859.us-east-1.elb.amazonaws.com npm run build
+      - echo Rodando testes unitários
+      - cd $CODEBUILD_SRC_DIR && npm install --loglevel=error && npm test
